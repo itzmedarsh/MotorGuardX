@@ -191,7 +191,11 @@ def form_message(request):
 # ---------------- Middleware ----------------
 
 PUBLIC_PATHS = {
-    "/login", "/signup", "/health", "/favicon.ico"
+    "/login",
+    "/signup",
+    "/health",
+    "/favicon.ico",
+    "/data"
 }
 
 @web.middleware
