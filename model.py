@@ -1,6 +1,7 @@
 
 """Train MotorGuard Decision Tree classifier."""
 
+import os
 import joblib
 import pandas as pd
 
@@ -11,7 +12,6 @@ from sklearn.metrics import (
     classification_report,
     confusion_matrix
 )
-
 
 FEATURES = [
     "vib_rms",
@@ -24,16 +24,44 @@ FEATURES = [
     "temp_C"
 ]
 
-
 # Load dataset
+if not os.path.exists("dataset.csv"):
+    raise FileNotFoundError("dataset.csv not found!")
+
 df = pd.read_csv("dataset.csv")
 
-if df[FEATURES + ["status"]].isna().any().any():
+# Validate dataset
+if df.empty:
+    raise ValueError("Dataset is empty!")
+
+required_columns = FEATURES + ["status"]
+
+missing = [
+    col for col in required_columns
+    if col not in df.columns
+]
+
+if missing:
+    raise ValueError(f"Missing columns: {missing}")
+
+if df[required_columns].isna().any().any():
     raise ValueError("Dataset contains missing values.")
 
-X = df[FEATURES]
-y = df["status"].astype(str)
+if not df[FEATURES].apply(
+    pd.to_numeric, errors="coerce"
+).notna().all().all():
+    raise ValueError("Dataset contains invalid numeric values.")
 
+if df["status"].nunique() < 2:
+    raise ValueError("At least two classes are required.")
+
+print("Dataset loaded:", len(df), "samples")
+print("\nClass distribution:")
+print(df["status"].value_counts())
+
+# Prepare features and labels
+X = df[FEATURES].astype(float)
+y = df["status"].astype(str)
 
 # Split dataset
 X_train, X_test, y_train, y_test = train_test_split(
@@ -43,7 +71,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42,
     stratify=y
 )
-
 
 # Train Decision Tree
 model = DecisionTreeClassifier(
@@ -55,14 +82,14 @@ model = DecisionTreeClassifier(
 
 model.fit(X_train, y_train)
 
-
 # Evaluate model
 y_pred = model.predict(X_test)
 
 accuracy = accuracy_score(y_test, y_pred)
 
 print("\n========== MOTORGUARD ML RESULTS ==========")
-
+print("Training samples:", len(X_train))
+print("Testing samples:", len(X_test))
 print("Accuracy:", round(accuracy, 4))
 
 print("\nClassification Report:")
@@ -85,8 +112,7 @@ print(
     )
 )
 
-
-# Test observed 0.35 A example.
+# Test observed 0.35 A example
 test_case = pd.DataFrame([{
     "vib_rms": 0.40,
     "vib_mean": 0.25,
@@ -99,12 +125,10 @@ test_case = pd.DataFrame([{
 }], columns=FEATURES)
 
 prediction = model.predict(test_case)[0]
-
 probabilities = model.predict_proba(test_case)[0]
 
-print("\n0.35 A Test Prediction:", prediction)
-
-print("\nPrediction Probabilities:")
+print("\n========== 0.35 A TEST ==========")
+print("Prediction:", prediction)
 
 for category, probability in zip(
     model.classes_,
@@ -112,11 +136,9 @@ for category, probability in zip(
 ):
     print(f"{category}: {probability * 100:.2f}%")
 
-
 # Save trained model
 joblib.dump(model, "modelDecision.pkl")
 
-print("\nModel saved as modelDecision.pkl")
+print("\nModel saved successfully!")
 print("Feature order:", FEATURES)
-
 print("==========================================")
