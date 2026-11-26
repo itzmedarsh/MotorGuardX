@@ -8,6 +8,19 @@ import numpy as np
 import pandas as pd
 import random
 
+columns = [
+    "vib_rms",
+    "vib_mean",
+    "vib_std",
+    "current_rms",
+    "current_mean",
+    "current_std",
+    "rpm",
+    "temp_C"
+]
+
+data = []
+
 RNG = np.random.default_rng(42)
 N = 1000
 
