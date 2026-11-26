@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotorGuard | Industrial Monitoring</title>
+
+    <link rel="stylesheet" href="/static/style.css?v=3">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">⚙</div>
+                <div>
+                    <h2>Flux</h2>
+                    <span>INDUSTRIAL Alert SYSTEM</span>
+                </div>
+            </div>
+
+
+            <nav>
+                <a href="#overview" class="active">Overview</a>
+                <a href="#faultHistory">Fault History</a>
+                <a href="#analytics">Analytics</a>
+                <a href="#security" id="securityNav">Security &amp; Authorization</a>
+                <a href="/admin/users" id="adminNav" hidden>User Management</a>
+            </nav>
+
+
+            <div class="connection">
+                <span class="dot" id="connection-dot"></span>
+                <span id="connection-text">CHECKING...</span>
+            </div>
+        </aside>
+
+
+        <!-- Main -->
+        <main class="main" id="overview">
+
+            <header>
+                <div>
+                    <p class="eyebrow">INDUSTRIAL SYSTEM</p>
+                    <h1>Motor Condition Monitor</h1>
+                    <p class="subtitle">
+                        Real-time sensor monitoring & AI fault detection
+                    </p>
+                </div>
+
+                <div class="connection">
+                    <span class="dot" id="header-connection-dot"></span>
+                    <span id="header-connection-text">CHECKING...</span>
+                </div>
+            </header>
+
+
+            <!-- Motor Status -->
+            <section class="status-card normal" id="statusCard">
+
+                <div class="status-left">
+                    <div class="big-status" id="motorStatus">
+                        ---
+                    </div>
+
+                    <p id="statusDescription">
+                        Motor operating within normal parameters
+                    </p>
+                </div>
+
+                <div class="status-icon" id="statusIcon">
+                    ✓
+                </div>
+
+            </section>
+
+
+            <!-- Sensor Cards -->
+            <section class="sensor-grid">
+
+                <div class="sensor-card">
+                    <div class="sensor-top">
+                        <span class="sensor-label">TEMPERATURE</span>
+                    </div>
+
+                    <div class="sensor-value">
+                        <span id="temperature">0.0</span>
+                        <small>°C</small>
+                    </div>
+
+                    <div class="sensor-state">NORMAL</div>
+                </div>
+
+
+                <div class="sensor-card">
+                    <div class="sensor-top">
+                        <span class="sensor-label">CURRENT</span>
+                    </div>
+
+                    <div class="sensor-value">
+                        <span id="current">0.00</span>
+                        <small>A</small>
+                    </div>
+
+                    <div class="sensor-state">NORMAL</div>
+                </div>
+
+
+                <div class="sensor-card">
+                    <div class="sensor-top">
+                        <span class="sensor-label">RPM</span>
+                    </div>
+
+                    <div class="sensor-value">
+                        <span id="rpm">0</span>
+                        <small>RPM</small>
+                    </div>
+
+                    <div class="sensor-state">NORMAL</div>
+                </div>
+
+
+                <div class="sensor-card">
+                    <div class="sensor-top">
+                        <span class="sensor-label">VIBRATION</span>
+                    </div>
+
+                    <div class="sensor-value">
+                        <span id="vibration">0.00</span>
+                        <small>RMS</small>
+                    </div>
+
+                    <div class="sensor-state">NORMAL</div>
+                </div>
+
+            </section>
+
+
+            <!-- Charts -->
+            <section class="charts">
+
+                <!-- Gauges -->
+                <section class="charts">
+
+                    <!-- Vibration Gauge -->
+                    <div class="chart-card gauge-card">
+
+                        <div class="chart-header">
+                            <div>
+                                <h3>Vibration</h3>
+                                <p>Real-time vibration RMS</p>
+                            </div>
+                            <span class="live">● LIVE</span>
+                        </div>
+
+                        <div class="gauge-container">
+
+                            <div class="gauge">
+
+                                <div class="gauge-arc"></div>
+
+                                <div class="gauge-needle" id="vibrationNeedle">
+                                    <div class="needle-center"></div>
+                                </div>
+
+                                <div class="gauge-label min">0</div>
+                                <div class="gauge-label mid">1.0</div>
+                                <div class="gauge-label max">2.0</div>
+
+                                <div class="gauge-value">
+                                    <strong id="vibrationGaugeValue">0.00</strong>
+                                    <span>RMS</span>
+                                </div>
+
+                            </div>
+
+                            <div class="threshold">
+                                <span>Threshold</span>
+                                <strong>1.5</strong>
+                                <small>RMS</small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Current Gauge -->
+                    <div class="chart-card gauge-card">
+
+                        <div class="chart-header">
+                            <div>
+                                <h3>Current</h3>
+                                <p>Motor current consumption</p>
+                            </div>
+                            <span class="live">● LIVE</span>
+                        </div>
+
+                        <div class="gauge-container">
+
+                            <div class="gauge">
+
+                                <div class="gauge-arc"></div>
+
+                                <div class="gauge-needle" id="currentNeedle">
+                                    <div class="needle-center"></div>
+                                </div>
+
+                                <div class="gauge-label min">0</div>
+                                <div class="gauge-label mid">1.0</div>
+                                <div class="gauge-label max">2.0</div>
+
+                                <div class="gauge-value">
+                                    <strong id="currentGaugeValue">0.00</strong>
+                                    <span>A</span>
+                                </div>
+
+                            </div>
+
+                            <div class="threshold">
+                                <span>Threshold</span>
+                                <strong>1.5</strong>
+                                <small>A</small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </section>
+
+
+
+            <!-- Automatic Cooling / Fan Panel -->
+            <section class="fan-panel" id="fanPanel">
+                <div class="fan-panel-head">
+                    <div>
+                        <p class="eyebrow">THERMAL MANAGEMENT</p>
+                        <h2>Cooling Fan Control</h2>
+                        <p class="fan-subtitle">Live physical fan status reported by ESP32</p>
+                    </div>
+                    <span class="fan-mode-badge" id="fanModeBadge">AUTO MODE</span>
+                </div>
+
+                <div class="fan-panel-body">
+                    <div class="fan-visual" id="fanVisual" aria-label="Cooling fan status">
+                        <div class="fan-ring"><span class="fan-symbol">✥</span></div>
+                        <strong id="fanState">STANDBY</strong>
+                        <small id="fanReason">Waiting for temperature data</small>
+                    </div>
+
+                    <div class="fan-controls">
+                        <div class="fan-reading">
+                            <span class="label">MOTOR TEMPERATURE</span>
+                            <strong><span id="fanTemperature">--.-</span> °C</strong>
+                        </div>
+                        <div class="fan-thresholds">
+                            <div><span>Fan ON above</span><strong>50°C</strong></div>
+                            <div><span>Fan OFF below</span><strong>45°C</strong></div>
+                        </div>
+                        <p class="fan-note" id="fanNote">Waiting for verified fan status from the ESP32. Fan operation remains locally controlled by the ESP32.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Diagnosis -->
+            <section class="ai-card">
+
+                <div class="ai-header">
+                    <div>
+                        <p class="eyebrow">EDGE AI</p>
+                        <h2>AI Diagnosis</h2>
+                    </div>
+
+                    <div class="ai-badge">
+                        DECISION TREE
+                    </div>
+                </div>
+
+                <div class="diagnosis">
+
+                    <div>
+                        <span class="label">CURRENT PREDICTION</span>
+                        <strong id="prediction">NORMAL</strong>
+                    </div>
+
+                    <div>
+                        <span class="label">CONFIDENCE</span>
+                        <strong id="confidence">96%</strong>
+                    </div>
+
+                    <div>
+                        <span class="label">LAST UPDATED</span>
+                        <strong id="updated">Just now</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Fault History -->
+            <section class="data-panel" id="faultHistory">
+                <div class="data-panel-head">
+                    <div>
+                        <p class="eyebrow">MAINTENANCE RECORDS</p>
+                        <h2>Fault History</h2>
+                        <p class="panel-subtitle">Recorded AI fault transitions from this browser</p>
+                    </div>
+                    <button type="button" class="panel-button" id="clearFaultHistory">Clear history</button>
+                </div>
+                <div class="history-summary">
+                    <div><span>TOTAL EVENTS</span><strong id="faultCount">0</strong></div>
+                    <div><span>LATEST EVENT</span><strong id="lastFault">No faults recorded</strong></div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead><tr><th>TIME</th><th>FAULT</th><th>TEMPERATURE</th><th>CURRENT</th><th>VIBRATION</th><th>RPM</th></tr></thead>
+                        <tbody id="faultHistoryBody"><tr><td colspan="6" class="empty-state">No fault events recorded yet.</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Analytics -->
+            <section class="data-panel" id="analytics">
+                <div class="data-panel-head">
+                    <div>
+                        <p class="eyebrow">PERFORMANCE INSIGHTS</p>
+                        <h2>Motor Analytics</h2>
+                        <p class="panel-subtitle">Live sensor trends during this browser session</p>
+                    </div>
+                    <span class="live">● LIVE</span>
+                </div>
+                <div class="analytics-grid">
+                    <article class="analytics-card"><h3>Temperature trend</h3><canvas id="temperatureChart" height="150"></canvas></article>
+                    <article class="analytics-card"><h3>Current trend</h3><canvas id="currentChart" height="150"></canvas></article>
+                    <article class="analytics-card"><h3>Vibration trend</h3><canvas id="vibrationChart" height="150"></canvas></article>
+                    <article class="analytics-card"><h3>RPM trend</h3><canvas id="rpmChart" height="150"></canvas></article>
+                </div>
+                <p class="analytics-note" id="analyticsNote">Charts begin updating when live ESP32 data arrives. The latest 30 readings are retained in this page session.</p>
+            </section>
+
+            <!-- Security & Authorization -->
+            <section class="security-panel" id="security">
+                <div class="security-head">
+                    <div>
+                        <p class="eyebrow">ACCESS CONTROL</p>
+                        <h2>Security &amp; Authorization</h2>
+                        <p class="security-subtitle">Live backend security configuration and recent security events</p>
+                    </div>
+                    <span class="security-status" id="securityOverall">CHECKING</span>
+                </div>
+                <div class="security-grid">
+                    <article class="security-tile"><span>API KEY</span><strong id="apiKeyStatus">Checking…</strong><small>ESP32 request authentication</small></article>
+                    <article class="security-tile"><span>HMAC SIGNATURE</span><strong id="hmacStatus">Checking…</strong><small>SHA-256 request integrity</small></article>
+                    <article class="security-tile"><span>REPLAY PROTECTION</span><strong id="replayStatus">Checking…</strong><small>Timestamp and nonce validation</small></article>
+                    <article class="security-tile"><span>RATE LIMIT</span><strong id="rateLimitStatus">Checking…</strong><small>Maximum requests per second</small></article>
+                </div>
+                <div class="security-log">
+                    <div class="security-log-head"><h3>Recent security events</h3><button type="button" id="refreshSecurity">Refresh</button></div>
+                    <p id="securityMessage" class="security-subtitle">Loading security information…</p>
+                    <pre id="securityEvents">Waiting for authorized response…</pre>
+                </div>
+            </section>
+
+            <footer>
+                MotorGuard • Real-time Industrial Condition Monitoring
+            </footer>
+
+        </main>
+
+    </div>
+
+    <script src="/static/script.js?v=3"></script>
+
+</body>

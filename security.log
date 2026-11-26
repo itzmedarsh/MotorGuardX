@@ -1,0 +1,5 @@
+2026-11-26 08:23:56,475 INFO Successful admin login for admin from 127.0.0.1
+2026-11-26 08:45:36,256 INFO Successful admin login for admin from 127.0.0.1
+2026-11-26 08:45:52,805 WARNING Failed login attempt for username darshan from 127.0.0.1
+2026-11-26 08:46:06,949 INFO New user registration for darshan from 127.0.0.1
+2026-11-26 08:46:16,000 INFO Successful user login for darshan from 127.0.0.1

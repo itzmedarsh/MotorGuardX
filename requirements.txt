@@ -1,0 +1,9 @@
+aiohttp
+aiohttp-session
+cryptography
+argon2-cffi
+python-dotenv
+joblib
+numpy
+pandas
+scikit-learn
