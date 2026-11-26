@@ -17,24 +17,24 @@ def u(low, high):
 rows = []
 
 def add(label, ranges):
-    columns = [
-        "vib_rms", "vib_mean", "vib_std",
-        "current_rms", "current_mean", "current_std",
-        "rpm", "temp_C"
-    ]
+    values = []
 
-    values = [u(*ranges[column]) for column in columns]
+    for column in columns:
+        value = ranges[column]
 
-    for sample in zip(*values):
-        rows.append([*sample, label])
+        if isinstance(value, tuple):
+            value = random.uniform(*value)
 
+        values.append(value)
+
+    data.append(values + [label])
 
 # NORMAL
 add("NORMAL", {
     "vib_rms": (.20, .60),
     "vib_mean": (.10, .40),
     "vib_std": (.05, .20),
-    "current_rms": random.uniform(0.10, 0.25),
+    "current_rms":(0.10, 0.25),
     "current_mean": (.08, .28),
     "current_std": (.01, .09),
     "rpm": (900, 1000),
@@ -48,7 +48,7 @@ add("OVERCURRENT", {
     "vib_rms": (.20, .70),
     "vib_mean": (.10, .40),
     "vib_std": (.05, .25),
-    "current_rms": random.uniform(0.28, 0.80),
+    "current_rms":(0.28, 0.80),
     "current_mean": (.30, .75),
     "current_std": (.03, .25),
     "rpm": (800, 1000),
