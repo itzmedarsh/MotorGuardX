@@ -6,9 +6,13 @@ Replace with labelled real motor readings for production validation.
 
 import numpy as np
 import pandas as pd
-import random
 
-columns = [
+# Reproducible random generator
+RNG = np.random.default_rng(42)
+
+N = 1000
+
+FEATURES = [
     "vib_rms",
     "vib_mean",
     "vib_std",
@@ -21,33 +25,27 @@ columns = [
 
 data = []
 
-RNG = np.random.default_rng(42)
-N = 1000
-
-def u(low, high):
-    return RNG.uniform(low, high, N)
-
-rows = []
 
 def add(label, ranges):
-    values = []
+    """Generate N samples for one motor condition."""
 
-    for column in columns:
-        value = ranges[column]
+    for _ in range(N):
+        row = {}
 
-        if isinstance(value, tuple):
-            value = random.uniform(*value)
+        for feature in FEATURES:
+            low, high = ranges[feature]
+            row[feature] = float(RNG.uniform(low, high))
 
-        values.append(value)
+        row["status"] = label
+        data.append(row)
 
-    data.append(values + [label])
 
 # NORMAL
 add("NORMAL", {
     "vib_rms": (.20, .60),
     "vib_mean": (.10, .40),
     "vib_std": (.05, .20),
-    "current_rms":(0.10, 0.25),
+    "current_rms": (.10, .25),
     "current_mean": (.08, .28),
     "current_std": (.01, .09),
     "rpm": (900, 1000),
@@ -56,12 +54,11 @@ add("NORMAL", {
 
 
 # OVERCURRENT
-# Includes the observed 0.35 A test reading.
 add("OVERCURRENT", {
     "vib_rms": (.20, .70),
     "vib_mean": (.10, .40),
     "vib_std": (.05, .25),
-    "current_rms":(0.28, 0.80),
+    "current_rms": (.28, .80),
     "current_mean": (.30, .75),
     "current_std": (.03, .25),
     "rpm": (800, 1000),
@@ -108,28 +105,29 @@ add("STOPPED", {
 })
 
 
-columns = [
-    "vib_rms",
-    "vib_mean",
-    "vib_std",
-    "current_rms",
-    "current_mean",
-    "current_std",
-    "rpm",
-    "temp_C",
-    "status"
-]
+# Create DataFrame
+df = pd.DataFrame(data)
 
-df = pd.DataFrame(rows, columns=columns)
-
+# Shuffle dataset
 df = df.sample(
     frac=1,
     random_state=42
 ).reset_index(drop=True)
 
+# Validate dataset
+if df.empty:
+    raise ValueError("Generated dataset is empty!")
+
+if df.isnull().any().any():
+    raise ValueError("Dataset contains missing values!")
+
+# Save dataset
 df.to_csv("dataset.csv", index=False)
 
-print("Dataset created successfully!")
+print("===================================")
+print("MotorGuard Dataset Generated")
+print("===================================")
+
 print("Total samples:", len(df))
 print("\nClass distribution:")
 print(df["status"].value_counts())
@@ -140,3 +138,5 @@ print(
     .agg(["min", "max", "mean"])
     .round(3)
 )
+
+print("\nDataset saved successfully!")
