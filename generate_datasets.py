@@ -6,6 +6,7 @@ Replace with labelled real motor readings for production validation.
 
 import numpy as np
 import pandas as pd
+import random
 
 RNG = np.random.default_rng(42)
 N = 1000
