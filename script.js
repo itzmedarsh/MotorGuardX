@@ -1,4 +1,4 @@
-onst temperatureElement = document.getElementById("temperature");
+const temperatureElement = document.getElementById("temperature");
 const currentElement = document.getElementById("current");
 const rpmElement = document.getElementById("rpm");
 const vibrationElement = document.getElementById("vibration");
